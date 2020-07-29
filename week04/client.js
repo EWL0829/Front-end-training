@@ -1,3 +1,4 @@
+const parser = require('./parser.js');
 const net = require('net');
 
 class Request {
@@ -273,7 +274,9 @@ void async function() {
         },
     });
     let response = await request.send(); // send会返回一个promise
-    console.log('response', response);
+
+    let dom = parser.parseHTML(response.body);
+    console.log('dom', dom); // eslint-disable-line
 }()
 
 

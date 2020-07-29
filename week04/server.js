@@ -13,7 +13,28 @@ http.createServer((req, res) => {
         body = [].concat(body).toString();
         console.log("body:", body);
         res.writeHead(200, {'Content-Type': 'text/html'});
-        res.end(' hello world\n');
+        res.end(`
+        <html maaa=a>
+        <head>
+            <style>
+                body div #myid {
+                    width: 100px;
+                }
+                body div img {
+                    width: 30px;
+                    background-color: #ff1111;
+                }
+        
+            </style>
+        </head>
+        <body>
+            <div>
+                <img id="myid" />
+                <img />
+            </div>
+        </body>
+        </html>
+    `);
     })
 }).listen(8088);
 console.log('server started'); // eslint-disable-line
