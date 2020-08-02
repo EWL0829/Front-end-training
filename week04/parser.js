@@ -47,6 +47,38 @@ function addCSSRules(text) {
     rules.push(...ast.stylesheet.rules);
 }
 
+// 优先级计算
+function specificity (selector) {
+    // 第一位 行内样式
+    // 第二位 id选择器样式
+    // 第三位 class选择器样式
+    // 第四位 tagName选择器样式
+    const p = [0, 0, 0, 0];
+    const selectorParts = selector.split(' ');
+    for (let part of selectorParts) {
+        if (part.charAt(0) === '#') {
+            p[1] += 1；
+        } else if (part.charAt(0) === '.') {
+            p[2] += 1;
+        } else {
+            p[3] += 1;
+        }
+    }
+    
+    return p;
+}
+
+function compare(sp1, sp2) {
+    if (sp1[0]-sp2[0]) {
+        return sp1[0]-sp2[0];
+    } else if (sp1[1]-sp2[1]) {
+        return sp1[1]-sp2[1];
+    } else if (sp1[2]-sp2[2]) {
+        return sp1[2]-sp2[2]
+    }
+    
+    return sp1[3]-sp2[3];
+}
 
 function computeCSS(element) {
     // CSS规则都是从右向左匹配的
@@ -90,7 +122,21 @@ function computeCSS(element) {
         }
 
         if (matched) {
-            console.log('element', element, 'matched rule', rule);
+            const sp = specificity(rules.selectors[0]);
+            const computedStyle = element.computedStyle;
+            for (let declaration of rule.declarations) {
+                if (!computedStyle[declaration.property]) {
+                   computedStyle[declaration.property] = {};
+                }
+                
+                if (!computedStyle[declaration.property].specificity) {
+                    computedStyle[declaration.property].value = declaration.value;
+                    computedStyle[declaration.property].specificity = sp;
+                } else if (compare(computedStyle[declaration.property].specificity, sp) < 0) {
+                    computedStyle[declaration.property].value = declaration.value;
+                    computedStyle[declaration.property].specificity = sp;
+                }
+            }
         }
     }
 }
