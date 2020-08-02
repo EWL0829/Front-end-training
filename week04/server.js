@@ -20,7 +20,7 @@ http.createServer((req, res) => {
                 body div #myid {
                     width: 100px;
                 }
-                body div img {
+                body div .img {
                     width: 30px;
                     background-color: #ff1111;
                 }
@@ -30,7 +30,7 @@ http.createServer((req, res) => {
         <body>
             <div>
                 <img id="myid" />
-                <img />
+                <img class="img img-item" />
             </div>
         </body>
         </html>

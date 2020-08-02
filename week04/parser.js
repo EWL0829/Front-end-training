@@ -18,11 +18,19 @@ function match(element, selector) {
             return true;
         }
     } else if (selector.charAt(0) === '.') {
+        if (element.tagName === 'img') {
+            console.log('ele', element); // eslint-disable-line
+        }
         // 类选择器
         // 其实这里可能存在多个类名的情况，可以将attr处理成数组
         let attr = element.attributes.filter(attr => attr.name === 'class')[0];
-        if (attr && attr.value === selector.replace('.', '')) {
-            return true;
+
+        if (attr) {
+            if (attr.value.match(/\s+/) && attr.value.split(' ').indexOf(selector.replace('.', '')) > -1) {
+                return true;
+            } else if (attr.value === selector.replace('#', '')) {
+                return true
+            }
         }
 
     } else {
@@ -112,6 +120,9 @@ function emit (token) {
         }
 
         computeCSS(element);
+        if (element.tagName === 'img') {
+            console.log('element', element); // eslint-disable-line
+        }
 
         top.children.push(element);
         element.parent = top;
